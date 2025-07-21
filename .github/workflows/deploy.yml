@@ -31,12 +31,7 @@ jobs:
         aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 423755636060.dkr.ecr.us-east-2.amazonaws.com
         docker build -t golu .
         docker tag golu:latest 423755636060.dkr.ecr.us-east-2.amazonaws.com/golu:latest
-        docker push 423755636060.dkr.ecr.us-east-2.amazonaws.com/golu:latest
-        
-
-    - name: Push Docker image to ECR
-      run: |
-        docker push $IMAGE_URI
+        docker push 423755636060.dkr.ecr.us-east-2.amazonaws.com/golu:latest  
 
     - name: Update image tag in deploy.yaml
       run: |
