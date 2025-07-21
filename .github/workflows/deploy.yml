@@ -33,6 +33,12 @@ jobs:
         docker tag golu:latest 423755636060.dkr.ecr.us-east-2.amazonaws.com/golu:latest
         docker push 423755636060.dkr.ecr.us-east-2.amazonaws.com/golu:latest  
 
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
 
     - name: SSH into EC2 and deploy
       run: |
