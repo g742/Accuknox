@@ -1,0 +1,56 @@
+name: Build and Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      ECR_REGISTRY: 423755636060.dkr.ecr.us-east-1.amazonaws.com
+      IMAGE_NAME: golu
+      EKS_CLUSTER_NAME: your-eks-cluster-name  # <-- set your EKS cluster name here
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build Docker Image
+      run: |
+        IMAGE_TAG=${GITHUB_SHA::7}
+        docker build -t $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
+        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+    - name: Push Docker Image to ECR
+      run: |
+        docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+
+    - name: Update image tag in deploy.yaml
+      run: |
+        sed -i "s|IMAGETAGHERE|$IMAGE_TAG|" deploy.yaml
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Update kubeconfig for EKS cluster
+      run: |
+        aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region us-east-1
+
+    - name: Deploy to EKS
+      run: |
+        kubectl apply -f deploy.yaml
