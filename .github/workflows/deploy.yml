@@ -46,4 +46,4 @@ jobs:
           kubectl apply -f Acck/deploy.yaml
         EOF
         
-    -
+    
