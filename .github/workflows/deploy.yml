@@ -11,7 +11,7 @@ jobs:
 
     env:
       AWS_REGION: us-east-2
-      ECR_REGISTRY: 423755636060.dkr.ecr.us-east-2.amazonaws.com/golu
+      ECR_REGISTRY: ${{ secrets.ECR_LOGIN }}
       IMAGE_NAME: golu
       EKS_CLUSTER_NAME: my-cluster
 
