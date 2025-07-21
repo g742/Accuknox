@@ -6,6 +6,6 @@
     (My domain in my case is wisecow.work.gd)
 6 - apply SSL/TLS through nginx cert-manager ingress
 7 - taken doamin through freedomain.one
-
+8 - task DONE
 
 
