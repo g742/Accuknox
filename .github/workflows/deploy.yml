@@ -13,7 +13,7 @@ jobs:
       AWS_REGION: us-east-2
       ECR_REGISTRY: ${{ secrets.ECR_LOGIN }}
       IMAGE_NAME: golu
-      EKS_CLUSTER_NAME: my-cluster
+      EKS_CLUSTER_NAME: my-cluster 
 
     steps:
     - name: Checkout repository
